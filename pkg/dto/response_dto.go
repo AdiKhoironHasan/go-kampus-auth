@@ -7,6 +7,7 @@ type ResponseDTO struct {
 }
 
 type UserResponse struct {
-	ID   int64  `json:"id_user"`
-	Name string `json:"name"`
+	ID    int64  `json:"id_user"`
+	Name  string `json:"name"`
+	Token string `json:"token"`
 }

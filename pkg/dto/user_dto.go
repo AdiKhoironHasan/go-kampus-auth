@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"github.com/AdiKhoironHasan/matkul/pkg/common/validator"
+	"github.com/AdiKhoironHasan/go-kampus-auth/pkg/common/validator"
 )
 
 type UserLoginReqDTO struct {

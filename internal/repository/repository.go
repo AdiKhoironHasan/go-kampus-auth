@@ -1,7 +1,7 @@
 package repository
 
-import "github.com/AdiKhoironHasan/matkul/internal/models"
+import "github.com/AdiKhoironHasan/go-kampus-auth/internal/models"
 
 type Repository interface {
-	Login(dataMahasiswa *models.UserModels) (bool, error)
+	Login(dataMahasiswa *models.UserModels) ([]*models.UserModels, error)
 }

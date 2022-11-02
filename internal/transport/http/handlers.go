@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/AdiKhoironHasan/matkul/internal/services"
-	"github.com/AdiKhoironHasan/matkul/pkg/dto"
-	matkulErrors "github.com/AdiKhoironHasan/matkul/pkg/errors"
+	"github.com/AdiKhoironHasan/go-kampus-auth/internal/services"
+	authConst "github.com/AdiKhoironHasan/go-kampus-auth/pkg/common/const"
+	"github.com/AdiKhoironHasan/go-kampus-auth/pkg/dto"
+	matkulErrors "github.com/AdiKhoironHasan/go-kampus-auth/pkg/errors"
 	"github.com/apex/log"
 
 	"github.com/labstack/echo"
@@ -42,6 +43,7 @@ func (h *HttpHandler) Ping(c echo.Context) error {
 
 func (h *HttpHandler) Login(c echo.Context) error {
 	postDTO := dto.UserLoginReqDTO{}
+	var data *dto.UserResponse
 
 	if err := c.Bind(&postDTO); err != nil {
 		log.Error(err.Error())
@@ -58,7 +60,7 @@ func (h *HttpHandler) Login(c echo.Context) error {
 		})
 	}
 
-	err = h.service.SaveMatkul(&postDTO)
+	data, err = h.service.Login(&postDTO)
 	if err != nil {
 		log.Error(err.Error())
 		return c.JSON(getStatusCode(err), dto.ResponseDTO{
@@ -68,13 +70,23 @@ func (h *HttpHandler) Login(c echo.Context) error {
 		})
 	}
 
-	// var resp = dto.ResponseDTO{
-	// 	Success: true,
-	// 	Message: matkulConst.SaveSuccess,
-	// 	Data:    nil,
-	// }
+	if data == nil {
+		var resp = dto.ResponseDTO{
+			Success: false,
+			Message: authConst.LoginFailed,
+			Data:    nil,
+		}
 
-	return c.JSON(http.StatusOK, nil)
+		return c.JSON(http.StatusUnauthorized, resp)
+	}
+
+	var resp = dto.ResponseDTO{
+		Success: true,
+		Message: authConst.LoginSuccess,
+		Data:    data,
+	}
+
+	return c.JSON(http.StatusOK, resp)
 }
 
 func getStatusCode(err error) int {

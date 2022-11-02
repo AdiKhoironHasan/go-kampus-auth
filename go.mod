@@ -1,4 +1,4 @@
-module github.com/AdiKhoironHasan/matkul
+module github.com/AdiKhoironHasan/go-kampus-auth
 
 go 1.17
 

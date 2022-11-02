@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"log"
 
-	authErrors "github.com/AdiKhoironHasan/golangProject1/pkg/errors"
-	"github.com/AdiKhoironHasan/matkul/internal/models"
-	"github.com/AdiKhoironHasan/matkul/internal/repository"
+	"github.com/AdiKhoironHasan/go-kampus-auth/internal/models"
+	"github.com/AdiKhoironHasan/go-kampus-auth/internal/repository"
+	authErrors "github.com/AdiKhoironHasan/go-kampus-auth/pkg/errors"
 	"github.com/jmoiron/sqlx"
 )
 
 const (
 	SaveMahasiswa       = `INSERT INTO kampus.mahasiswas (nama, nim, created_at) VALUES ($1, $2, now()) RETURNING id`
 	SaveMahasiswaAlamat = `INSERT INTO kampus.mahasiswa_alamats (jalan, no_rumah, created_at, id_mahasiswas) VALUES ($1,$2, now(), $3)`
-	Login               = `SELECT id FROM kampus.users WHERE email = %s AND password = %s`
+	Login               = `SELECT id, name FROM kampus.users WHERE email = '%s' AND password = '%s' LIMIT 1`
 )
 
 var statement PreparedStatement
@@ -48,21 +48,22 @@ func InitPreparedStatement(m *PostgreSQLRepo) {
 	}
 }
 
-func (p *PostgreSQLRepo) Login(dataLogin *models.UserModels) (bool, error) {
-	var idUser int64
+func (p *PostgreSQLRepo) Login(dataLogin *models.UserModels) ([]*models.UserModels, error) {
+	var dataUser []*models.UserModels
 	var query string
-	query = fmt.Sprintf(Login, dataLogin.Email, dataLogin.Password)
 
-	err := p.Conn.Select(&idUser, query)
+	query = fmt.Sprintf(Login, dataLogin.Email, dataLogin.Password)
+	fmt.Println(query)
+	err := p.Conn.Select(&dataUser, query)
 
 	if err != nil {
 		log.Println("Failed Query GetMahasiswaAlamat: ", err.Error())
-		return false, fmt.Errorf(authErrors.ErrorDB)
+		return nil, fmt.Errorf(authErrors.ErrorDB)
 	}
 
-	if idUser < 1 {
-		return false, fmt.Errorf(authErrors.ErrorDataNotFound)
+	if len(dataUser) == 0 {
+		return nil, nil
 	}
 
-	return true, nil
+	return dataUser, nil
 }

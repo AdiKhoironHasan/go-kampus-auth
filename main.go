@@ -6,13 +6,13 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/AdiKhoironHasan/matkul/pkg/database"
+	"github.com/AdiKhoironHasan/go-kampus-auth/pkg/database"
 
-	integ "github.com/AdiKhoironHasan/matkul/internal/integration"
-	Repo "github.com/AdiKhoironHasan/matkul/internal/repository/postgresql"
-	"github.com/AdiKhoironHasan/matkul/internal/services"
-	handlers "github.com/AdiKhoironHasan/matkul/internal/transport/http"
-	"github.com/AdiKhoironHasan/matkul/internal/transport/http/middleware"
+	integ "github.com/AdiKhoironHasan/go-kampus-auth/internal/integration"
+	Repo "github.com/AdiKhoironHasan/go-kampus-auth/internal/repository/postgresql"
+	"github.com/AdiKhoironHasan/go-kampus-auth/internal/services"
+	handlers "github.com/AdiKhoironHasan/go-kampus-auth/internal/transport/http"
+	"github.com/AdiKhoironHasan/go-kampus-auth/internal/transport/http/middleware"
 
 	"github.com/apex/log"
 	"github.com/labstack/echo"
