@@ -12,6 +12,8 @@ import (
 	"github.com/apex/log"
 
 	"github.com/labstack/echo"
+	middleware "github.com/labstack/echo/middleware"
+	// "github.com/dgrijalva/jwt-go"
 )
 
 type HttpHandler struct {
@@ -25,9 +27,17 @@ func NewHttpHandler(e *echo.Echo, srv services.Services) {
 	g := e.Group("api/v1/auth")
 	g.GET("/ping", handler.Ping)
 	g.POST("/login", handler.Login)
+
+	eJWT := e.Group("api/v1/mustlogin")
+	eJWT.Use(middleware.JWT([]byte("the_secret_key")))
+	eJWT.GET("/check", handler.Ping)
 }
 
 func (h *HttpHandler) Ping(c echo.Context) error {
+
+	// middleware.
+	// jwt.
+	fmt.Println("jwt: ", middleware.JWT([]byte("the_secret_key")))
 
 	version := os.Getenv("VERSION")
 	fmt.Println(version)
